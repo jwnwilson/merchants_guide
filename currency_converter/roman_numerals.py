@@ -62,3 +62,5 @@ class RomanNumeralConverter():
             else:
                 total += cls._get_val(char_1)
 
+        return total
+

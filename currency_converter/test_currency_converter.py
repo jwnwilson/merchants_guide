@@ -45,7 +45,7 @@ class TestRomanNumerals():
 
     @pytest.mark.parametrize("input_list,expected_value", [
         (['l', 'i', 'i'], 52),
-        (['pish tegj glob'], 41),
+        (['x', 'l', 'i'], 41),
     ])
     def test_get_amount_results(self, input_list, expected_value):
         output_val = self.r_converter.get_amount(input_list)
@@ -62,15 +62,24 @@ class TestRomanNumerals():
         test_result = self.r_converter._is_subtractable(input_str_1, input_str_2)
         assert test_result == expected_bool
 
-    @pytest.mark.parametrize("input_str_1,input_str_2,expected_bool", [
+    @pytest.mark.parametrize("input_str,expected_val", [
         ('i', 1),
         ('v', 5),
         ('x', 10),
         ('l', 50)
     ])
-    def test_is_subtractable_result(self, input_str, expected_val):
+    def test_get_val_result(self, input_str, expected_val):
         test_result = self.r_converter._get_val(input_str)
         assert test_result == expected_val
+
+    @pytest.mark.parametrize("input_str", [
+        'iiii',
+        'vvvv',
+        'xxxx'
+    ])
+    def test_get_amount_results_invalid_input(self, input_str):
+        with pytest.raises(InvalidInput):
+            test_result = self.r_converter._get_val(input_str)
 
 
 class TestAlienTranslator():
@@ -83,7 +92,7 @@ class TestAlienTranslator():
     ])
     def test_get_amount_strings_returned_values(self, input_str, expected_list):
         output_list = self.translator.get_amount_strings(input_str)
-        assert  output_list == expected_list
+        assert output_list['translated'] == expected_list
 
     @pytest.mark.parametrize("input_str,expected_num", [
         ('gold', 14450),

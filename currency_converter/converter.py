@@ -61,11 +61,25 @@ class GalaxyCurrencyConverter():
         """
         # Test that cleaned string only has terms we expect
         self.translator.validate(cleaned_string)
+        self.original_input = cleaned_string
 
-        self.parsed_data['amount_strings'] = self.translator.get_amount_strings(
-            cleaned_string)
-        self.parsed_data['value'] = self.translator.get_value(
-            cleaned_string)
+        # Pick out translated words and store them separately
+        translated_strings = self.translator.get_amount_strings(cleaned_string)
+        remaining_strings = translated_strings['remaining']
+        self.parsed_data['amount_strings'] = translated_strings['translated']
+
+        if remaining_strings:
+            if len(remaining_strings) > 1:
+                raise InvalidInput('Multiple value strings detected: {}'.format(
+                    str(translated_strings['remaining'])
+                ))
+            # Value words are capitalized
+            for word in remaining_strings:
+                self.original_input = self.original_input.replace(word, word.title())
+
+            self.parsed_data['value'] = self.translator.get_value(remaining_strings[0])
+        else:
+            self.parsed_data['value'] = 1
 
     def _validate_string(self, cleaned_string):
         """
@@ -78,10 +92,13 @@ class GalaxyCurrencyConverter():
 
         """
         for key, phrase in self.valid_start_phrases.items():
+            phrase = phrase.lower()
             if cleaned_string.startswith(phrase):
                 self.valid_input = True
                 self.response = self.responses[key]
-                cleaned_string.remove(phrase)
+                # Remove our expected non alien words
+                cleaned_string = cleaned_string.replace(
+                    phrase, '', 1).strip()
                 break
 
         if not self.valid_input:
@@ -93,7 +110,7 @@ class GalaxyCurrencyConverter():
         self.parsed_data['amount'] = self.converter.get_amount(
             self.parsed_data['amount_strings'])
 
-        self.parsed_data['total_amount'] = (
+        self.parsed_data['total_amount'] = int(
             self.parsed_data['amount'] * self.parsed_data['value'])
 
     def parse(self, input_str):
@@ -118,11 +135,12 @@ class GalaxyCurrencyConverter():
         try:
             self.parse(input_str)
             self._calculate_amount()
+            self.response = self.response.format(
+                self.original_input, self.parsed_data['total_amount'])
         except InvalidInput as e:
             logger.error('Invalid input: {}, {}'.format(
                 input_str, str(e)))
             self.response = self.responses['invalid']
 
-        return self.response.format(
-            self.parsed_data['total_amount'])
+        return self.response
 

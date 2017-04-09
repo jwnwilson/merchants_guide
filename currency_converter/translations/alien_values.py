@@ -2,7 +2,7 @@ WORDS = {
   "glob": "i",
   "prok": "v",
   "pish": "x",
-  "tegj": "L"
+  "tegj": "l"
 }
 
 VALUES = {
