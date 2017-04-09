@@ -38,6 +38,19 @@ class TestGalaxyConverterOutput():
             'could chuck wood ?')
         assert output_str == 'I have no idea what you are talking about'
 
+    def test_clean_input_string(self):
+        pass
+
+    def test_validate_string_return_values(self):
+        pass
+
+    def test_parse_loads_currect_data(self):
+        pass
+
+    def test_calculate_amount_correct_total(self):
+        pass
+
+
 
 class TestRomanNumerals():
     def setup_method(self, method):

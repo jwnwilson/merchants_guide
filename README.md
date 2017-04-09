@@ -1,5 +1,27 @@
+# Galaxy Currency Converter
 
-Notes:
+This project is written in python 3
+
+## Setting up the project
+
+To run the project and tests please run in a terminal:
+
+$ source py_venv.sh
+
+## Runing the project
+
+$ python translate.py --input "how many Credits is glob prok Silver ?"
+
+## Running tests:
+
+$ pytest
+
+## Coverage report:
+
+$ py.test --cov-report html --cov=currency_converter --verbose
+$ open htmlcov/index.html
+
+## Notes:
 
 I've used relative imports, I know this can be a problem for larger projects and was just a
 choice I used as a preference for this task, I'd be happy to conform to the existing code base

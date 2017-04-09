@@ -51,7 +51,7 @@ class GalaxyCurrencyConverter():
 
     def _translate_string(self, cleaned_string):
         """
-        Use our tranlator instance to parse and translate the remaining
+        Use our translator instance to parse and translate the remaining
         string after removing expected english parts
         Args:
             cleaned_string: 
@@ -61,25 +61,11 @@ class GalaxyCurrencyConverter():
         """
         # Test that cleaned string only has terms we expect
         self.translator.validate(cleaned_string)
-        self.original_input = cleaned_string
 
         # Pick out translated words and store them separately
-        translated_strings = self.translator.get_amount_strings(cleaned_string)
-        remaining_strings = translated_strings['remaining']
-        self.parsed_data['amount_strings'] = translated_strings['translated']
-
-        if remaining_strings:
-            if len(remaining_strings) > 1:
-                raise InvalidInput('Multiple value strings detected: {}'.format(
-                    str(translated_strings['remaining'])
-                ))
-            # Value words are capitalized
-            for word in remaining_strings:
-                self.original_input = self.original_input.replace(word, word.title())
-
-            self.parsed_data['value'] = self.translator.get_value(remaining_strings[0])
-        else:
-            self.parsed_data['value'] = 1
+        translated_data = self.translator.translate(cleaned_string)
+        self.parsed_data['amount_strings'] = translated_data['amount_strings']
+        self.parsed_data['value'] = translated_data['value']
 
     def _validate_string(self, cleaned_string):
         """
@@ -106,17 +92,45 @@ class GalaxyCurrencyConverter():
 
         return cleaned_string
 
+    def _clean_input_string(self, input_str):
+        """
+        Sanitise input by removing numbers and non alphabetic characters
+        store the original input for use in response and handle grammer in
+        the original response
+        
+        Args:
+            input_str: 
+
+        Returns:
+
+        """
+        cleaned_string = clean_string(input_str)
+        cleaned_string = self._validate_string(cleaned_string)
+        self.original_input = cleaned_string
+        # Value words are capitalized
+        for word in self.translator.values:
+            self.original_input = self.original_input.replace(
+                word, word.title())
+        return cleaned_string
+
     def _calculate_amount(self):
+        """
+        Calculate the total value to return in the reponse from parsed data.
+        
+        Returns:
+
+        """
         self.parsed_data['amount'] = self.converter.get_amount(
             self.parsed_data['amount_strings'])
 
         self.parsed_data['total_amount'] = int(
             self.parsed_data['amount'] * self.parsed_data['value'])
 
-    def parse(self, input_str):
+    def _parse(self, input_str):
         """
-        Validate input and break the string into different seconds
-        to be translated.
+        Validate input and break the string into different strings to be translated
+        by the translator instance.
+        
         Args:
             input_str: (str) string value to validate and break into
                 separate lists of data to translate
@@ -125,15 +139,12 @@ class GalaxyCurrencyConverter():
             None
         """
         self.reset_parsed_data()
-
-        cleaned_string = clean_string(input_str)
-        cleaned_string = self._validate_string(cleaned_string)
-
+        cleaned_string = self._clean_input_string(input_str)
         self._translate_string(cleaned_string)
 
     def translate(self, input_str):
         try:
-            self.parse(input_str)
+            self._parse(input_str)
             self._calculate_amount()
             self.response = self.response.format(
                 self.original_input, self.parsed_data['total_amount'])
@@ -143,4 +154,3 @@ class GalaxyCurrencyConverter():
             self.response = self.responses['invalid']
 
         return self.response
-
