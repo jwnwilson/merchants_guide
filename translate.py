@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from currency_converter.translator import translate_input
+from currency_converter.converter import translate_input
 
 logger = logging.getLogger(__name__)
 

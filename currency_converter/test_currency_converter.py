@@ -1,6 +1,6 @@
 import pytest
 
-from .translator import GalaxyTranslator, translate_input
+from .converter import GalaxyTranslator, translate_input
 
 
 class TestGalaxyTranslatorOutput():
