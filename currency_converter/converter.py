@@ -92,7 +92,7 @@ class GalaxyCurrencyConverter():
 
         return cleaned_string
 
-    def _clean_input_string(self, input_str):
+    def _clean_validate_string(self, input_str):
         """
         Sanitise input by removing numbers and non alphabetic characters
         store the original input for use in response and handle grammer in
@@ -139,7 +139,7 @@ class GalaxyCurrencyConverter():
             None
         """
         self.reset_parsed_data()
-        cleaned_string = self._clean_input_string(input_str)
+        cleaned_string = self._clean_validate_string(input_str)
         self._translate_string(cleaned_string)
 
     def translate(self, input_str):

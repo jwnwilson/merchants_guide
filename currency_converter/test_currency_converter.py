@@ -38,18 +38,34 @@ class TestGalaxyConverterOutput():
             'could chuck wood ?')
         assert output_str == 'I have no idea what you are talking about'
 
-    def test_clean_input_string(self):
-        pass
+    def test_clean_validate_string_invalid(self):
+        input_str = 'you wot m8'
+        with pytest.raises(InvalidInput):
+            output_str = self.translator._clean_validate_string(input_str)
 
-    def test_validate_string_return_values(self):
-        pass
+    @pytest.mark.parametrize("input_str,expected_str", [
+        ('how much is gold worth?', 'gold worth'),
+        ('how many Credits is silver worth?', 'silver worth')
+    ])
+    def test_clean_validate_string_valid(self, input_str, expected_str):
+        output_str = self.translator._clean_validate_string(input_str)
+        assert output_str == expected_str
 
-    def test_parse_loads_currect_data(self):
-        pass
+    @pytest.mark.parametrize("input_str,expected_str", [
+        ('how much is gold worth?', 'Gold worth'),
+        ('how many Credits is silver worth?', 'Silver worth')
+    ])
+    def test_clean_validate_string_original_input_capitalizes(self, input_str, expected_str):
+        self.translator._clean_validate_string(input_str)
+        assert self.translator.original_input == expected_str
 
     def test_calculate_amount_correct_total(self):
-        pass
-
+        self.translator.parsed_data['amount_strings'] = [
+            'i', 'i', 'i'
+        ]
+        self.translator.parsed_data['value'] = 5
+        self.translator._calculate_amount()
+        assert self.translator.parsed_data['total_amount'] == 15
 
 
 class TestRomanNumerals():
