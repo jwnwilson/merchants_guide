@@ -1,6 +1,6 @@
 import logging
 
-from currency_converter.roman_numerials import RomanNumeralConverter
+from currency_converter.roman_numerals import RomanNumeralConverter
 from .exceptions import InvalidInput
 from .translations.alien_translator import AlienTranslator
 from .utils import clean_string
@@ -33,11 +33,13 @@ class GalaxyCurrencyConverter():
         'amount': '{} is {}',
         'credits': '{} is {} Credits'
     }
+    converter_class = RomanNumeralConverter
+    translator_class = AlienTranslator
 
     def __init__(self):
         # Instance tools
-        self.converter = RomanNumeralConverter()
-        self.translator = AlienTranslator()
+        self.converter = self.converter_class()
+        self.translator = self.translator_class()
         # Instance translation variables
         self.reset_parsed_data()
 

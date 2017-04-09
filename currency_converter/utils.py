@@ -3,7 +3,7 @@ import re
 
 def clean_string(string):
     """
-    Make the strings easily comparable by removing non alphanumerical
+    Make the strings easily comparable by removing non alphabetical
     and change to lower characters
 
     Args:
@@ -11,7 +11,7 @@ def clean_string(string):
     Returns:
         (str) cleaned string
     """
-    string = re.sub('[^A-Za-z0-9]+', ' ', string)
+    string = re.sub('[^A-Za-z]+', ' ', string)
     string = string.lower()
     string = ' '.join(string.split())
     return string

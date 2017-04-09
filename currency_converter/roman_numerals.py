@@ -18,23 +18,27 @@ class RomanNumeralConverter():
         'l': ['x']
     }
 
-    def _get_val(self, char):
+    @classmethod
+    def _get_val(cls, char):
         try:
-            return self.roman_value_map[char]
+            return cls.roman_value_map[char]
         except KeyError:
             raise InvalidInput('"{}" is an invalid roman numeral'.format(
                 char
             ))
 
-    def _valid_subtraction(self, char1, char2):
-        return char1 in self.valid_subtraction_map[char2]
+    @classmethod
+    def _valid_subtraction(cls, char1, char2):
+        return char1 in cls.valid_subtraction_map[char2]
 
-    def _is_subtractable(self, char1, char2):
-        val1 = self._get_val(char1)
-        val2 = self._get_val(char2)
-        return val2 > val1 and self._valid_subtraction(char1, char2)
+    @classmethod
+    def _is_subtractable(cls, char1, char2):
+        val1 = cls._get_val(char1)
+        val2 = cls._get_val(char2)
+        return val2 > val1 and cls._valid_subtraction(char1, char2)
 
-    def get_amount(self, numeral_list):
+    @classmethod
+    def get_amount(cls, numeral_list):
         remaining_chars = deepcopy(numeral_list)
         total = 0
         same_char_count = 0
@@ -52,9 +56,9 @@ class RomanNumeralConverter():
             else:
                 same_char_count = 0
 
-            if char_2 and self._is_subtractable(char_1, char_2):
-                total += self._get_val(char_2) - self._get_val(char_1)
+            if char_2 and cls._is_subtractable(char_1, char_2):
+                total += cls._get_val(char_2) - cls._get_val(char_1)
                 remaining_chars.pop(0)
             else:
-                total += self._get_val(char_1)
+                total += cls._get_val(char_1)
 

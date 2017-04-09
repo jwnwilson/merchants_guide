@@ -6,8 +6,8 @@ WORDS = {
 }
 
 VALUES = {
-  "silver": 17,
-  "gold": 14450,
+  "silver": 17.0,
+  "gold": 14450.0,
   "iron": 195.5
 }
 
