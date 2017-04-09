@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from currency_converter.exceptions import InvalidInput
+from .exceptions import InvalidInput
 
 
 class RomanNumeralConverter():
@@ -39,6 +39,14 @@ class RomanNumeralConverter():
 
     @classmethod
     def get_amount(cls, numeral_list):
+        """
+        Get numerical amount for list of roman numerals
+        Args:
+            numeral_list: (list) of roman numeral strings
+
+        Returns:
+            (int) total value of roman numerals
+        """
         remaining_chars = deepcopy(numeral_list)
         total = 0
         same_char_count = 0

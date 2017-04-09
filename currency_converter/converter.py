@@ -1,6 +1,6 @@
 import logging
 
-from currency_converter.roman_numerals import RomanNumeralConverter
+from .roman_numerals import RomanNumeralConverter
 from .exceptions import InvalidInput
 from .translations.alien_translator import AlienTranslator
 from .utils import clean_string
@@ -24,6 +24,10 @@ def translate_input(input_str):
 
 
 class GalaxyCurrencyConverter():
+    """
+    Main interface for translating and converting strings words to 
+    english values
+    """
     valid_start_phrases = {
         'amount': 'how much is',
         'credits': 'how many Credits is'
@@ -57,7 +61,7 @@ class GalaxyCurrencyConverter():
             cleaned_string: 
 
         Returns:
-
+            None
         """
         # Test that cleaned string only has terms we expect
         self.translator.validate(cleaned_string)
@@ -70,12 +74,12 @@ class GalaxyCurrencyConverter():
     def _validate_string(self, cleaned_string):
         """
         Look for english phase at start of input and remove it after
-        checking it is acceptable input.
+        checking it is acceptable input then return cleaned string.
         Args:
             cleaned_string: 
 
         Returns:
-
+            (str) cleaned string
         """
         for key, phrase in self.valid_start_phrases.items():
             phrase = phrase.lower()
@@ -102,7 +106,7 @@ class GalaxyCurrencyConverter():
             input_str: 
 
         Returns:
-
+            (str) cleaned / validated string
         """
         cleaned_string = clean_string(input_str)
         cleaned_string = self._validate_string(cleaned_string)
@@ -115,10 +119,11 @@ class GalaxyCurrencyConverter():
 
     def _calculate_amount(self):
         """
-        Calculate the total value to return in the reponse from parsed data.
+        Calculate the total value to return in the reponse from parsed data, stores
+        in instance parsed data.
         
         Returns:
-
+            None
         """
         self.parsed_data['amount'] = self.converter.get_amount(
             self.parsed_data['amount_strings'])
@@ -128,8 +133,9 @@ class GalaxyCurrencyConverter():
 
     def _parse(self, input_str):
         """
-        Validate input and break the string into different strings to be translated
-        by the translator instance.
+        Validate input and break the string into sub-strings to be translated
+        by the translator instance, stores translated data in instance
+        parsed_data attr
         
         Args:
             input_str: (str) string value to validate and break into
@@ -143,13 +149,23 @@ class GalaxyCurrencyConverter():
         self._translate_string(cleaned_string)
 
     def translate(self, input_str):
+        """
+        Main entry point for this class accepts input string and will return
+        translated and converted string
+        Args:
+            input_str: (str) string value to validate and break into
+                separate lists of data to translate
+
+        Returns:
+            (str) final translated and converted string
+        """
         try:
             self._parse(input_str)
             self._calculate_amount()
             self.response = self.response.format(
                 self.original_input, self.parsed_data['total_amount'])
         except InvalidInput as e:
-            logger.error('Invalid input: {}, {}'.format(
+            logger.error('Invalid input: "{}", {}'.format(
                 input_str, str(e)))
             self.response = self.responses['invalid']
 

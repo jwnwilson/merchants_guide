@@ -100,5 +100,5 @@ class AlienTranslator():
 
         for word in cleaned_string.split():
             if word not in valid_words:
-                raise InvalidInput('"{}" is an invalid word to '
-                    'translate'.format(word))
+                raise InvalidInput(
+                    '"{}" is an invalid word to translate'.format(word))
