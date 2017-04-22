@@ -101,14 +101,14 @@ class TestRomanNumerals():
         test_result = self.r_converter._get_val(input_str)
         assert test_result == expected_val
 
-    @pytest.mark.parametrize("input_str", [
-        'iiii',
-        'vvvv',
-        'xxxx'
+    @pytest.mark.parametrize("input_list", [
+        ['i', 'i', 'i', 'i'],
+        ['v', 'v', 'v', 'v'],
+        ['x', 'x', 'x', 'x']
     ])
-    def test_get_amount_results_invalid_input(self, input_str):
+    def test_get_amount_results_invalid_input(self, input_list):
         with pytest.raises(InvalidInput):
-            test_result = self.r_converter._get_val(input_str)
+            test_result = self.r_converter.get_amount(input_list)
 
 
 class TestAlienTranslator():
