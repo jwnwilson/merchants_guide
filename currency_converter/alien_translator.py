@@ -205,18 +205,25 @@ class AlienTranslator:
         Raises:
             InvalidInput
         """
-        valid = False
         if output_value:
-            reg_lists = self.output_regex
+            # Valid output strings will be in word bankds
+            valid = True
+            valid_values = list(self.words.keys()) + list(self.values.keys())
+
+            for word in cleaned_string.split():
+                if word not in valid_values:
+                    valid = False
         else:
+            # Valid input strings will be identified by regex
+            valid = False
             reg_lists = [
                 item for sublist in self.input_regex.values() for item in
                 sublist]
 
-        for reg in reg_lists:
-            if re.search(reg, cleaned_string):
-                valid = True
-                break
+            for reg in reg_lists:
+                if re.search(reg, cleaned_string):
+                    valid = True
+                    break
 
         if not valid:
             raise InvalidInput(

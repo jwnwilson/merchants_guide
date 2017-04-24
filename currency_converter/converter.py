@@ -72,16 +72,18 @@ class GalaxyCurrencyConverter():
             self.parsed_data['amount_strings'] = translated_data['amount_strings']
             self.parsed_data['value'] = translated_data['value']
 
-    def _get_translate_string(self, cleaned_string):
+    def _get_translate_string(self, input_str):
         """
         Look for english phase at start of input and remove it after
         checking it is acceptable input then return cleaned string.
         Args:
-            cleaned_string: 
+            input_str: 
 
         Returns:
             (str) cleaned string
         """
+        cleaned_string = clean_string(input_str)
+
         for key, phrase in self.valid_output_phrases.items():
             phrase = phrase.lower()
             if cleaned_string.startswith(phrase):
@@ -130,8 +132,7 @@ class GalaxyCurrencyConverter():
             None
         """
         self._reset_parsed_data()
-        cleaned_string = clean_string(input_str)
-        to_translate = self._get_translate_string(cleaned_string)
+        to_translate = self._get_translate_string(input_str)
         self._translate_string(to_translate, self.valid_output)
 
     def translate(self, input_str):

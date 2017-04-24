@@ -13,7 +13,7 @@ class TestGalaxyConverterOutput():
 
     def test_non_alpha_characters(self):
         output_str = translate_input('how much is 1 tegj glob glob?')
-        assert output_str == 'tegj glob glob is 52'
+        assert output_str == 'I have no idea what you are talking about'
 
     def test_amount_translation(self):
         output_str = translate_input('how much is pish tegj glob glob')
@@ -38,25 +38,25 @@ class TestGalaxyConverterOutput():
             'could chuck wood ?')
         assert output_str == 'I have no idea what you are talking about'
 
-    def test_clean_validate_string_invalid(self):
+    def test_validate_invalid(self):
         input_str = 'you wot m8'
         with pytest.raises(InvalidInput):
-            output_str = self.translator._clean_validate_string(input_str)
+            output_str = self.translator._translate_string(input_str, True)
 
     @pytest.mark.parametrize("input_str,expected_str", [
-        ('how much is gold worth?', 'gold worth'),
-        ('how many Credits is silver worth?', 'silver worth')
+        ('how much is gold?', 'gold'),
+        ('how many Credits is silver?', 'silver')
     ])
-    def test_clean_validate_string_valid(self, input_str, expected_str):
-        output_str = self.translator._clean_validate_string(input_str)
+    def test_translate_string_valid(self, input_str, expected_str):
+        output_str = self.translator._get_translate_string(input_str)
         assert output_str == expected_str
 
     @pytest.mark.parametrize("input_str,expected_str", [
         ('how much is gold worth?', 'Gold worth'),
         ('how many Credits is silver worth?', 'Silver worth')
     ])
-    def test_clean_validate_string_original_input_capitalizes(self, input_str, expected_str):
-        self.translator._clean_validate_string(input_str)
+    def test_translate_string_original_input_capitalizes(self, input_str, expected_str):
+        self.translator._get_translate_string(input_str)
         assert self.translator.original_input == expected_str
 
     def test_calculate_amount_correct_total(self):
@@ -142,17 +142,17 @@ class TestAlienTranslator():
         'tegj'
     ])
     def test_validate_valid_results(self, input_str):
-        self.translator.validate(input_str)
+        self.translator.validate(input_str, True)
 
-    @pytest.mark.parametrize("input_str", [
-        'test',
-        'batman',
-        'robin',
-        'spiderman'
+    @pytest.mark.parametrize("input_str,output_bool", [
+        ('test', True),
+        ('batman', True),
+        ('robin', True),
+        ('spiderman', True)
     ])
-    def test_validate_invalid_results(self, input_str):
+    def test_validate_invalid_results(self, input_str, output_bool):
         with pytest.raises(InvalidInput):
-            self.translator.validate(input_str)
+            self.translator.validate(input_str, output_bool)
 
 
 class TestUtils():
@@ -160,4 +160,4 @@ class TestUtils():
         non_alpha_numeric = 'th!s is, a. "\' TESt?111'
         clean_str = clean_string(non_alpha_numeric)
 
-        assert clean_str == 'th s is a test'
+        assert clean_str == 'th s is a test 111'
