@@ -11,7 +11,7 @@ def clean_string(string):
     Returns:
         (str) cleaned string
     """
-    string = re.sub('[^A-Za-z]+', ' ', string)
+    string = re.sub('[^A-Za-z0-9]+', ' ', string)
     string = string.lower()
     string = ' '.join(string.split())
     return string

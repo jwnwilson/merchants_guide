@@ -1,9 +1,9 @@
 import pytest
 
+from currency_converter.alien_translator import AlienTranslator
 from .converter import GalaxyCurrencyConverter, translate_input
 from .exceptions import InvalidInput
 from .roman_numerals import RomanNumeralConverter
-from .translations.alien_translator import AlienTranslator
 from .utils import clean_string
 
 

@@ -109,7 +109,13 @@ Input to your program consists of lines of text detailing your notes on the conv
 
 You are expected to handle invalid queries appropriately.
 
+## Updated spec:
+
+Parse input and calculate value of alien words, use translated words to calculate credit value of ores.
+
 Test input:
+
+<pre>
 glob is I
 prok is V
 pish is X
@@ -122,10 +128,13 @@ how many Credits is glob prok Silver ?
 how many Credits is glob prok Gold ?
 how many Credits is glob prok Iron ?
 how much wood could a woodchuck chuck if a woodchuck could chuck wood ?
+</pre>
 
 Test Output:
+<pre>
 pish tegj glob glob is 42
 glob prok Silver is 68 Credits
 glob prok Gold is 57800 Credits
 glob prok Iron is 782 Credits
 I have no idea what you are talking about
+</pre>
