@@ -1,6 +1,6 @@
 import pytest
 
-from currency_converter.alien_translator import AlienTranslator
+from currency_converter.translator import TranslateEngine
 from .converter import GalaxyCurrencyConverter, translate_input
 from .exceptions import InvalidInput
 from .roman_numerals import RomanNumeralConverter
@@ -111,9 +111,9 @@ class TestRomanNumerals():
             test_result = self.r_converter.get_amount(input_list)
 
 
-class TestAlienTranslator():
+class TestTranslator():
     def setup_method(self, method):
-        self.translator = AlienTranslator()
+        self.translator = TranslateEngine()
 
     @pytest.mark.parametrize("input_str,expected_list", [
         ('tegj glob glob', ['l', 'i', 'i']),

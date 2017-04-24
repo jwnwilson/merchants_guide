@@ -9,11 +9,10 @@ from currency_converter.roman_numerals import RomanNumeralConverter
 logger = logging.getLogger(__name__)
 
 
-class AlienTranslator:
+class TranslateEngine:
     """
     This class is responsible for storing word / translation mappings and 
-    for identifying if the string is input or output (Possibliy worth splitting
-    up responsibility)
+    for returning translations of words and values
     """
     converter_class = RomanNumeralConverter
     json_file = 'currency_converter/translations.json'
@@ -63,12 +62,12 @@ class AlienTranslator:
 
     def output_from_string(self, cleaned_string):
         """
-        
+        Return output to stdout based on input given from user.
         Args:
-            cleaned_string: 
+            cleaned_string: cleaned input str without invalid chars
 
         Returns:
-
+            (dict): contain translated words and translated values
         """
         translated_data = {
             'output': True
@@ -89,28 +88,36 @@ class AlienTranslator:
             translated_data['value'] = 1
         return translated_data
 
-    def input_from_string(self, cleaned_string):
+    def _get_regex_results(self, cleaned_string):
         """
-        
+        Use regex to get the expected values we are after from the string
         Args:
             cleaned_string: 
 
         Returns:
-
+            (tuple): (regex key, regex results) or (None, None)
         """
-        def get_regex_results(cleaned_string):
-            for key in self.input_regex:
-                for reg in self.input_regex[key]:
-                    values = re.search(reg, cleaned_string)
-                    reg_key = key
-                    if values:
-                        return reg_key, values
-            return None, None
+        for key in self.input_regex:
+            for reg in self.input_regex[key]:
+                values = re.search(reg, cleaned_string)
+                reg_key = key
+                if values:
+                    return reg_key, values
+        return None, None
 
+    def input_from_string(self, cleaned_string):
+        """
+        Store inputted values from strings parsed from input.
+        Args:
+            cleaned_string: string without invalid characters
+
+        Returns:
+            (dict) contains meta data
+        """
         translated_data = {
             'output': False
         }
-        reg_key, values = get_regex_results(cleaned_string)
+        reg_key, values = self._get_regex_results(cleaned_string)
 
         if reg_key == 'words':
             values = {values[1]: values[2]}
@@ -134,7 +141,7 @@ class AlienTranslator:
             cleaned_string: 
 
         Returns:
-
+            (dict): dict containing metadata and translation data
         """
         # Test that cleaned string only has terms we expect
         self.validate(cleaned_string, output_value=output_value)
@@ -206,7 +213,7 @@ class AlienTranslator:
             InvalidInput
         """
         if output_value:
-            # Valid output strings will be in word bankds
+            # Valid output strings will be in word banks
             valid = True
             valid_values = list(self.words.keys()) + list(self.values.keys())
 

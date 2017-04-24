@@ -1,6 +1,6 @@
 import logging
 
-from currency_converter.alien_translator import AlienTranslator
+from currency_converter.translator import TranslateEngine
 from .exceptions import InvalidInput
 from .roman_numerals import RomanNumeralConverter
 from .utils import clean_string
@@ -39,7 +39,7 @@ class GalaxyCurrencyConverter():
         'credits': '{} is {} Credits'
     }
     converter_class = RomanNumeralConverter
-    translator_class = AlienTranslator
+    translator_class = TranslateEngine
 
     def __init__(self):
         # Instance tools
@@ -64,7 +64,6 @@ class GalaxyCurrencyConverter():
         Returns:
             None
         """
-        # Pick out translated words and store them separately
         translated_data = self.translator.translate(
             cleaned_string, output_value=output_value)
 
@@ -75,9 +74,12 @@ class GalaxyCurrencyConverter():
     def _get_translate_string(self, input_str):
         """
         Look for english phase at start of input and remove it after
-        checking it is acceptable input then return cleaned string.
+        checking it is acceptable input then return cleaned string, store
+        english phrase to reuse in response and store if this is an output or 
+        input response
+        
         Args:
-            input_str: 
+            input_str: raw string from user
 
         Returns:
             (str) cleaned string
