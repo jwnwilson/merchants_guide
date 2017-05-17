@@ -1,5 +1,5 @@
 Author: Noel Wilson
-Email: jwnwilson@hotmail.co.ik
+Email: jwnwilson@hotmail.co.uk
 Date: 09/04/2016
 
 # Galaxy Currency Converter
