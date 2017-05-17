@@ -14,6 +14,10 @@ $ source py_venv.sh
 
 ## Runing the project
 
+(optional input for setting variables)
+
+$ python translate.py --input "glob is I"
+
 $ python translate.py --input "how many Credits is glob prok Silver ?"
 
 ## Running tests:
